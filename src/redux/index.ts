@@ -2,52 +2,48 @@ import { createStore } from 'redux';
 
 
 export interface ReduxState {
-    message: string | null;
-    arrayComponents: JSX.Element[] | null
+    factionCardsArray: JSX.Element[] | null
+    errorMessage: string | null
 };
 
 const initialState: ReduxState = {
-    message: null,
-    arrayComponents: null
+    factionCardsArray: null,
+    errorMessage: null,
 }
 
+const SET_FACTION_CARDS_ARRAY = 'SET_FACTION_CARDS_ARRAY';
+const SET_ERROR_MESSAGE = 'SET_ERROR_MESSAGE';
 
-export const SET_MESSAGE = 'SET_ERROR_MESSAGE';
-export const SET_ARRAY_COMPONENTS = 'SET_ARRAY_COMPONENTS';
-
-
-interface SetMessage {
-    type: typeof SET_MESSAGE
+interface SetFactionCardsArray {
+    type: typeof SET_FACTION_CARDS_ARRAY
+    payload: JSX.Element[]
+}
+interface SetErrorMessage {
+    type: typeof SET_ERROR_MESSAGE
     payload: string
 }
 
-interface SetArrayComponents {
-    type: typeof SET_ARRAY_COMPONENTS
-    payload: JSX.Element[]
-}
-
-
-export function setMessage(message: string): SetMessage {
+export function setFactionCardArray(array: JSX.Element[]): SetFactionCardsArray {
     return {
-        type: SET_MESSAGE,
-        payload: message,
-    };
-};
-
-export function setArrayComponents(array: JSX.Element[]): SetArrayComponents {
-    return {
-        type: SET_ARRAY_COMPONENTS,
+        type: SET_FACTION_CARDS_ARRAY,
         payload: array,
     };
 };
 
-export type Action = SetMessage | SetArrayComponents
+export function setErrorMessage(message: string): SetErrorMessage {
+    return {
+        type: SET_ERROR_MESSAGE,
+        payload: message,
+    };
+};
+
+export type Action = SetFactionCardsArray | SetErrorMessage
 
 
 export default function reducer(state = initialState, action: Action): ReduxState {
     switch (action.type) {
-      case SET_MESSAGE: return ({...state, message: action.payload});
-      case SET_ARRAY_COMPONENTS: return ({...state, arrayComponents: action.payload});
+      case SET_ERROR_MESSAGE: return ({...state, errorMessage: action.payload});
+      case SET_FACTION_CARDS_ARRAY: return ({...state, factionCardsArray: action.payload});
       default: return state;
     }
 }

@@ -1,62 +1,62 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import axios from 'axios';
+import { ReduxState, setErrorMessage, setFactionCardArray } from '../../redux';
+import { createURL } from '../../utils';
 import Loading from '../loading';
-import { ReduxState, setMessage, setArrayComponents } from '../../redux';
 
 interface MainProps {
-    message: string | null
     messageToState: Function
-    arrayComponents: JSX.Element[] | null
+    factionCardsArray: JSX.Element[] | null
     arrayComponentstoState: Function
 }
 
-interface SimplProps {
-    msg: string
+interface Factioninfo {
+    [index: string]: number | string
 }
 
 const mapStateToProps = (state: ReduxState) => ({
-    message: state.message,
-    arrayComponents: state.arrayComponents
+    factionCardsArray: state.factionCardsArray
 });
 
 const mapDispatchToProps = (dispatch: Function) => ({
-    messageToState: (msg: string) => dispatch(setMessage(msg)),
-    arrayComponentstoState: (array: JSX.Element[]) => dispatch(setArrayComponents(array))
+    messageToState: (msg: string) => dispatch(setErrorMessage(msg)),
+    arrayComponentstoState: (array: JSX.Element[]) => dispatch(setFactionCardArray(array))
 });
-
-const SimplComponent: React.FC<SimplProps> = (props) => (
-    <p>{props.msg}</p>
-)
 
 const Main: React.FC<MainProps> = (props) => {
     const {
-        message,
         messageToState,
-        arrayComponents,
+        factionCardsArray,
         arrayComponentstoState,
     } = props;
 
-        useEffect(() => {
-        if (message === null) {
-            setTimeout(() => {
-                console.log('after set timeout');
-                messageToState('message after set timeout');
-                const componentArray: JSX.Element[] = [
-                    <SimplComponent msg={'Component 0'} key={1}/>,
-                    <SimplComponent msg={'Component 1'} key={2}/>,
-                    <SimplComponent msg={'Component 2'} key={3}/>
-                ];
-                arrayComponentstoState(componentArray);
-            }, 2000);
+    useEffect(() => {
+        if (factionCardsArray === null) {
+            const url = createURL('universe/fractions');
+            axios.get(url)
+                .then(response => {
+                    const result = response.data;
+                    if (result.error) {
+                        messageToState(result.error);
+                    } else {
+                        const fractionsComponentArray = result.map(
+                            (faction: Factioninfo) => 
+                            // <FactionCard key={faction.faction_id} faction={faction} />
+                            <p key={faction.faction_id}>{`${faction.name}`}</p>
+                        );
+                        arrayComponentstoState(fractionsComponentArray);
+                    }
+                    console.log(result);
+            })
         }
     });
 
 
     return (
         <>
-            {message ? <p>{message}</p> : <Loading />}
-            {arrayComponents?
-                arrayComponents.map((component: JSX.Element) => {
+            {factionCardsArray?
+                factionCardsArray.map((component: JSX.Element) => {
                     return component;
                 }) :
                 <Loading />}
@@ -65,28 +65,3 @@ const Main: React.FC<MainProps> = (props) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
-
-
-
-
-
-
-
-// const getFactions = (props: PropsMain) => {
-//     const { setMessage, setFractionsCards } = props;
-//     const url = createURL('universe/fractions');
-//     axios.get(url)
-//         .then(response => {
-//             const result = response.data;
-//             // if (result.error) {
-//             //     setMessage(result.error);
-//             // } else {
-//             //     const fractionsComponentArray = result.map(
-//             //         (faction: {[index: string]: number | string}) => 
-//             //         <FactionCard key={faction.faction_id} faction={faction} />
-//             //     );
-//             //     setFractionsCards(fractionsComponentArray);
-//             // }
-//             console.log(result);
-//     })
-// }
