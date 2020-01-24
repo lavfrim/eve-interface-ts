@@ -41,4 +41,23 @@ export const createURL = (adress: string, options?: Options | undefined): string
     }
 
     return fullURL;
+};
+
+export interface ElementsWidth {
+    majorSectorWidth: number
+    asideWidth: number
+    cardWidth: number
 }
+
+export const getAmountCards = (elementsWidth: ElementsWidth): number => {
+    const { majorSectorWidth, asideWidth, cardWidth } = elementsWidth;
+    const winWindth: number = window.innerWidth;
+    const minCalculationWidth: number = majorSectorWidth + asideWidth * 2;
+    let amout: number = Math.trunc(majorSectorWidth / cardWidth);
+
+    if (winWindth > minCalculationWidth) {
+        amout += Math.trunc((winWindth - minCalculationWidth) / cardWidth);
+    }
+
+    return amout;
+};

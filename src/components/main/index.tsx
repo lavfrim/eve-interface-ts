@@ -1,18 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { ReduxState, setErrorMessage, setFactionCardArray } from '../../redux';
-import { createURL } from '../../utils';
+import { createURL, getAmountCards, ElementsWidth } from '../../utils';
+import { text } from '../../content';
 import Loading from '../loading';
+import Carousel from '../carousel';
+import FactionCard, { FactionInfo } from '../factionCard';
 
 interface MainProps {
     messageToState: Function
     factionCardsArray: JSX.Element[] | null
     arrayComponentstoState: Function
-}
-
-interface Factioninfo {
-    [index: string]: number | string
 }
 
 const mapStateToProps = (state: ReduxState) => ({
@@ -24,12 +23,34 @@ const mapDispatchToProps = (dispatch: Function) => ({
     arrayComponentstoState: (array: JSX.Element[]) => dispatch(setFactionCardArray(array))
 });
 
+const blockName: string = 'main';
+const elementsWidth: ElementsWidth = {
+    majorSectorWidth: 640,
+    asideWidth: 200,
+    cardWidth: 300
+};
+
+
 const Main: React.FC<MainProps> = (props) => {
+    const [amountCards, setAmountCards] = useState<number>(getAmountCards(elementsWidth));
+
     const {
-        messageToState,
+        messageToState, 
         factionCardsArray,
         arrayComponentstoState,
     } = props;
+    const { factions } = text;
+
+    let timeoutID: ReturnType<typeof setTimeout>;
+    const resizehandler = (): void => {
+
+        clearTimeout(timeoutID);
+
+        timeoutID = setTimeout(
+            () => setAmountCards(getAmountCards(elementsWidth)),
+            600
+        )
+    }
 
     useEffect(() => {
         if (factionCardsArray === null) {
@@ -41,26 +62,34 @@ const Main: React.FC<MainProps> = (props) => {
                         messageToState(result.error);
                     } else {
                         const fractionsComponentArray = result.map(
-                            (faction: Factioninfo) => 
-                            // <FactionCard key={faction.faction_id} faction={faction} />
-                            <p key={faction.faction_id}>{`${faction.name}`}</p>
+                            (faction: FactionInfo) => 
+                            <FactionCard key={faction.faction_id} faction={faction} />
                         );
                         arrayComponentstoState(fractionsComponentArray);
                     }
-                    console.log(result);
-            })
+            });
         }
+
+        window.removeEventListener("resize", resizehandler);
+        window.addEventListener("resize", resizehandler);
     });
 
 
     return (
-        <>
-            {factionCardsArray?
-                factionCardsArray.map((component: JSX.Element) => {
-                    return component;
-                }) :
+        <main className={blockName}>
+            <aside className={`${blockName}__side-left`}></aside>
+            <section className={`${blockName}__major-section`}>
+                {factionCardsArray?
+                <Carousel
+                    name={factions}
+                    perentClassName={`${blockName}__major-section`}
+                    factionCardsArray={factionCardsArray}
+                    amountCards={amountCards}
+                /> :
                 <Loading />}
-        </>
+            </section>
+            <aside className={`${blockName}__side-right`}></aside>
+        </main>
     )
 }
 

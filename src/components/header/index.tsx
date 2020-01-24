@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { text } from '../../content';
 import { ReduxState } from '../../redux';
 
-const blockName = 'header';
+const blockName: string = 'header';
 interface HeaderProps {
   errorMessage: string | null
 }
@@ -14,10 +14,15 @@ const mapStateToProps = (state: ReduxState) => ({
 
 const Header: React.FC<HeaderProps> = (props) => {
   const { errorMessage } = props;
+  const { app: { name, description } } = text;
+
   return (
     <header className={blockName}>
-        <p>{text.appName}</p>
-        {errorMessage && <p>{errorMessage}</p>}
+        <div className={`${blockName}__app-name`}>
+          <p className={`${blockName}__app-name__name`}>{name}</p>
+          <p className={`${blockName}__app-name__description`}>{description}</p>
+        </div>
+        {errorMessage && <p className={`${blockName}__error-message`}>{errorMessage}</p>}
     </header>
   );
 };

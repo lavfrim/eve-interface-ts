@@ -1,6 +1,5 @@
 import { createStore } from 'redux';
 
-
 export interface ReduxState {
     factionCardsArray: JSX.Element[] | null
     errorMessage: string | null

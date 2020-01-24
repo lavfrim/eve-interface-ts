@@ -1,12 +1,19 @@
 interface Text {
     [index: string]: string | object;
-    appName: string;
+    app: {
+        name: string;
+        description: string;
+        autor: {
+            name: string;
+        }
+    };
     loading: string;
     buttons: {
         forward: string;
         backward: string;
         close: string;
     };
+    factions: string;
     card: {
         ceoName: string;
         description: string;
@@ -16,16 +23,26 @@ interface Text {
         birthday: string;
         race: string;
     };
+    footer: {
+        created: string;
+    }
 };
 
-export const text = {
-    appName: 'EVE interface / interview task',
+export const text: Text = {
+    app: {
+        name: 'EVE interface',
+        description: 'Interview task (with TypeScpipt)',
+        autor: {
+            name: 'Lazarau Aliaksandr',
+        }
+    },
     loading: 'Loading...',
     buttons: {
         forward: '>',
         backward: '<',
         close: 'X',
     },
+    factions: 'Factions',
     card: {
         ceoName: 'CEO name:',
         description: 'Description:',
@@ -34,6 +51,9 @@ export const text = {
         memberCount: 'Member count:',
         birthday: 'Birthday:',
         race: 'Race:',
+    },
+    footer: {
+        created: 'Created by:',
     }
 };
 

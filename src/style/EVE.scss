@@ -1,16 +1,20 @@
-$color-zero: rgb(62, 62, 83);
+$color-zero: rgb(11, 24, 59);
 $color-one: rgb(202, 228, 236);
-$color-pop-up: rgba(0, 0, 0, 0.7);
+$color-font: rgb(202, 228, 236);
+$color-font-error: red;
+$color-pop-up: rgba(0, 0, 0, 0.5);
 $color-shadow: black;
 
-
 $font-one: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+$font-size-zero: 12px;
 $font-size-one: 14px;
 $font-size-two: 16px;
+$font-size-three: 56px;
 
 $margin-one: 2px;
 $margin-two: 5px;
 $margin-three: 30px;
+$margin-four: 20px;
 
 $border-button: $margin-one solid $color-one;
 
@@ -23,3 +27,238 @@ $height-card: 50px;
 $height--pop-up: 400px;
 
 $shadow-one: 0 10px 20px -5px $color-shadow;
+$shadow-font-border: 0px 0px 10px $color-shadow, 2px 0 0 $color-shadow, -2px 0 0 $color-shadow, 0 2px 0 $color-shadow, 0 -2px 0 $color-shadow, 1px 1px $color-shadow;
+
+$img-url: url(./img/eve_01.jpg);
+
+@mixin background-img {
+    background-image: $img-url;
+    background-color: $color-zero;
+    background-position: center; 
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+@mixin font-basic {
+    font-family: $font-one;
+    color: $color-font;
+    text-shadow: $shadow-font-border;
+}
+
+@mixin font-error {
+    font-size: $font-size-zero;
+    color: $color-font-error;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+@mixin center {
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin center-top {
+    justify-content: center;
+    align-items: start;
+}
+
+@mixin hover-button {
+    box-shadow: inset 0px 0px 10px $color-one;
+    transition: 0.2s;
+}
+
+@mixin button-navigation {
+    background: transparent;
+    border: $border-button;
+    color: $color-one;
+    font-size: $font-size-two * 2;
+    padding: 0px;
+    cursor: pointer;
+    text-shadow: $shadow-font-border;
+    &:hover{
+        @include hover-button();
+    }
+}
+
+@mixin card-content {
+    display: flex;
+    margin-top: $margin-two;
+    white-space: pre-wrap;
+
+    &-description {
+        margin-right: $margin-two;
+    }
+}
+
+.root {
+    display: grid; 
+    grid-template-rows: 1fr 12fr 30px;
+    grid-template-columns: 1fr;
+    @include font-basic();
+    @include background-img();
+}
+
+.header {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+    display: grid;
+    grid-template-columns: minmax(440px, 1000px) auto minmax(200px, 400px);
+    grid-template-rows: 1fr;
+
+    &__app-name {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+        align-self: center;
+        margin-left: $margin-three;
+
+        &__name {
+            font-size: $font-size-three;
+            letter-spacing: 4px;
+        }
+
+        &__description {
+            font-size: $font-size-one;
+            letter-spacing: 6px;
+        }
+    }
+
+    &__error-message {
+        grid-column: 3 / 4;
+        grid-row: 1 / 2;
+        align-self: center;
+        text-align: end;
+        margin: $margin-three;
+        @include font-error();
+    }
+}
+
+.main {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+    display: grid;
+    grid-template-columns: minmax(0px, 200px) minmax(640px, 6000px) minmax(0px, 200px);
+    grid-template-rows: 1fr;
+    margin-top: $margin-three;
+    margin-bottom: $margin-three;
+
+    &__major-section {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        display: grid;
+        
+        &__carousel {
+            display: grid;
+            grid-template-rows: 50px minmax(50px, 600px);
+            grid-template-columns: 1fr 4fr 1fr;
+            margin: $margin-four;
+
+            &__button-backward {
+                grid-column: 1 / 2;
+                grid-row: 1 / 2;
+                border: $border-button;
+                @include button-navigation();
+                border-top-left-radius: $margin-two * 2;
+                border-bottom-left-radius: $margin-two * 2;
+                background-color: $color-pop-up;
+            }
+
+            &__button-forward {
+                grid-column: 3 / 4;
+                grid-row: 1 / 2;
+                @include button-navigation();
+                border-top-right-radius: $margin-two * 2;
+                border-bottom-right-radius: $margin-two * 2;
+                background-color: $color-pop-up;
+            }
+
+            &__name {
+                grid-column: 2 / 3;
+                grid-row: 1 / 2;
+                display: flex;
+                @include center();
+                font-size: $font-size-two * 2;
+                letter-spacing: $margin-two;
+                border-top: $border-button;
+                border-bottom: $border-button;
+                background-color: $color-pop-up;
+            }
+
+            &__content {
+                grid-column: 1 / 4;
+                grid-row: 2 / 3;
+                display: flex;
+                margin-top: $margin-two * 2;
+                @include center-top;
+            }
+        }
+    }
+}
+
+.footer {
+    grid-row: 3 / 4;
+    grid-column: 1 / 2;
+    display: grid;
+    @include center();
+
+    &__container {
+        font-size: $font-size-one;
+
+        &__name {
+            margin-left: $margin-two;
+        }
+    }
+}
+
+.faction-card {
+    border: $border-button;
+    border-radius: $margin-two * 2;
+    padding: $margin-two;
+    background-color: $color-pop-up;
+    min-width: 300px;
+    width: 300px;
+    min-height: 65px;
+    display: grid;
+    margin-left: $margin-four / 4;
+    margin-right: $margin-four / 4;
+
+    &:hover{
+        @include hover-button();
+    }
+
+    &__name {
+        min-height: 65px;
+        display: flex;
+        text-align: center;
+        white-space: pre-wrap;
+        @include center();
+    }
+
+    &__corp-link {
+        @include card-content;
+    }
+
+    &__description {
+        @include card-content;
+        display: grid;
+        max-height: 290px;
+        overflow: auto;
+    }
+
+    &__solar-sys {
+        @include card-content;
+    }
+}
+
+::-webkit-scrollbar {
+    width: $margin-two;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px $color-pop-up;
+    border-radius: $margin-two;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: $margin-two;
+    box-shadow: inset 0 0 6px $color-pop-up;
+}
