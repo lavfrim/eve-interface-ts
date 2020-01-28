@@ -3,6 +3,7 @@ $color-one: rgb(202, 228, 236);
 $color-font: rgb(202, 228, 236);
 $color-font-error: red;
 $color-pop-up: rgba(0, 0, 0, 0.5);
+$color-pop-up-container: rgba(0, 0, 0, 0.8);
 $color-shadow: black;
 
 $font-one: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -20,13 +21,15 @@ $border-button: $margin-one solid $color-one;
 
 $width-card: 400px;
 $width-button-switch: 50px;
-$width-pop-up: 800px;
+$width-pop-up: 500px;
 
 $height-header: 50px;
 $height-card: 50px;
-$height--pop-up: 400px;
+$height-pop-up: 500px;
 
 $shadow-one: 0 10px 20px -5px $color-shadow;
+$shadow-text: 0px 0px 10px $color-one;
+$shadow-inset: inset 0 0 10px $color-one;
 $shadow-font-border: 0px 0px 10px $color-shadow, 2px 0 0 $color-shadow, -2px 0 0 $color-shadow, 0 2px 0 $color-shadow, 0 -2px 0 $color-shadow, 1px 1px $color-shadow;
 
 $img-url: url(./img/eve_01.jpg);
@@ -63,7 +66,12 @@ $img-url: url(./img/eve_01.jpg);
 }
 
 @mixin hover-button {
-    box-shadow: inset 0px 0px 10px $color-one;
+    box-shadow: $shadow-inset;
+    transition: 0.2s;
+}
+
+@mixin hover-text-button {
+    text-shadow: $shadow-text;
     transition: 0.2s;
 }
 
@@ -80,6 +88,18 @@ $img-url: url(./img/eve_01.jpg);
     }
 }
 
+@mixin button-pop-up {
+    background: transparent;
+    border: none;
+    color: $color-one;
+    font-size: $font-size-two * 2;
+    padding: 0px;
+    cursor: pointer;
+    &:hover {
+        @include hover-text-button();        
+    }
+}
+
 @mixin card-content {
     display: flex;
     margin-top: $margin-two;
@@ -87,6 +107,15 @@ $img-url: url(./img/eve_01.jpg);
 
     &-description {
         margin-right: $margin-two;
+    }
+}
+
+@mixin link {
+    text-decoration: underline;
+    cursor: pointer;
+    &:hover {
+        text-shadow: $shadow-text;
+        transition: 0.2s;
     }
 }
 
@@ -160,6 +189,9 @@ $img-url: url(./img/eve_01.jpg);
                 border-top-left-radius: $margin-two * 2;
                 border-bottom-left-radius: $margin-two * 2;
                 background-color: $color-pop-up;
+                &:hover {
+                    @include hover-text-button;
+                }
             }
 
             &__button-forward {
@@ -169,6 +201,9 @@ $img-url: url(./img/eve_01.jpg);
                 border-top-right-radius: $margin-two * 2;
                 border-bottom-right-radius: $margin-two * 2;
                 background-color: $color-pop-up;
+                &:hover {
+                    @include hover-text-button;
+                }
             }
 
             &__name {
@@ -245,6 +280,114 @@ $img-url: url(./img/eve_01.jpg);
     }
 
     &__solar-sys {
+        @include card-content;
+    }
+}
+
+.corporation-link {
+    @include link();
+}
+
+.pop-up {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    @include center();
+    width: 100vw;
+    height: 100vh;
+    background-color: $color-pop-up;
+    cursor: auto;
+
+    &__window {
+        width: $width-pop-up;
+        height: $height-pop-up;
+        background-color: $color-pop-up-container;
+        border: $border-button;
+        border-radius: $margin-two * 2;
+        display: grid;
+        grid-template-columns: 50px 50px auto 50px;
+        grid-template-rows: 50px auto 50px;
+        box-shadow: $shadow-inset;
+    }
+
+    &__button-backward {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+        @include button-pop-up();
+        border: none;
+    }
+
+    &__button-forward {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        @include button-pop-up();
+        border: none;
+    }
+
+    &__button-close {
+        grid-column: -2 / -1;
+        grid-row: 1 / 2;
+        @include button-pop-up();
+        border: none;
+    }
+
+    &__content-container {
+        grid-column: 2 / -2;
+        grid-row: 2 / -2;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+}
+
+.corporation-card {
+    
+    &__name {
+        min-height: 65px;
+        display: flex;
+        text-align: center;
+        white-space: pre-wrap;
+        @include center();
+    }
+
+    &__ceo-link {
+        @include card-content;
+
+        &-link {
+            @include link();
+        }
+    }
+
+    &__members-count {
+        @include card-content;
+    }
+
+    &__description {
+        @include card-content;
+        display: grid;
+        max-height: 290px;
+        overflow: auto;
+    }
+}
+
+.ceo-card {
+    
+    &__name {
+        min-height: 65px;
+        display: flex;
+        text-align: center;
+        white-space: pre-wrap;
+        @include center();
+        @include card-content;
+    }
+
+    &__birthday {
+        @include card-content;
+    }
+
+    &__race {
         @include card-content;
     }
 }

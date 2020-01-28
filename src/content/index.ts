@@ -1,5 +1,5 @@
-interface Text {
-    [index: string]: string | object;
+export interface Text {
+    // [index: string]: string | object;
     app: {
         name: string;
         description: string;
@@ -7,6 +7,11 @@ interface Text {
             name: string;
         }
     };
+    types: {
+        faction: string;
+        corporation: string;
+        ceo: string;
+    },
     loading: string;
     buttons: {
         forward: string;
@@ -35,6 +40,11 @@ export const text: Text = {
         autor: {
             name: 'Lazarau Aliaksandr',
         }
+    },
+    types: {
+        faction: 'faction',
+        corporation: 'corporation',
+        ceo: 'ceo',
     },
     loading: 'Loading...',
     buttons: {

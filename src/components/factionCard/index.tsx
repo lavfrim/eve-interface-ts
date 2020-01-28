@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { text } from '../../content';
 import { createURL } from '../../utils';
 import axios from 'axios';
+import CorporationLink from '../corporationLink';
 import Loading from '../loading';
+import { CorporationInfo } from '../corporationCard';
 
 export interface FactionInfo {
     corporation_id: number
@@ -15,18 +17,6 @@ export interface FactionInfo {
     solar_system_id: number
     station_count: number
     station_system_count: number
-}
-
-export interface CorporationInfo {
-    ceo_id: number
-    creator_id: number
-    description: string
-    home_station_id: number
-    member_count: number
-    name: string
-    shares: number
-    tax_rate: number
-    ticker: string
 }
 
 interface FactionCardProps {
@@ -68,6 +58,7 @@ const FactionCard: React.FC<FactionCardProps> = (props) => {
     }
 
     const handleClick = ():void => {
+        console.log(`toggle faction`)
         getSolarSystem();
         getCorporationInfo();
         setIsOpen(!isOpen);
@@ -76,15 +67,14 @@ const FactionCard: React.FC<FactionCardProps> = (props) => {
     return (
         <div
             className={blockName}
-            onClick={handleClick}
+            onClick={() => handleClick()}
         >
             <p className={`${blockName}__name`}>{name}</p>
             {isOpen && 
                 <>
                     <div className={`${blockName}__corp-link`}>
                         <p className={`${blockName}__corp-link-description`}>{card.corporationName}</p>
-                        {/* {corporation ? <PopupLink corporation={corporation} /> : <Loading />} */}
-                    {corporation ? <p>{corporation.name}</p> : <Loading />}
+                        {corporation ? <CorporationLink corporation={corporation} /> : <Loading />}
                     </div>
 
                     <div className={`${blockName}__description`}>
