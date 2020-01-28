@@ -58,7 +58,6 @@ const FactionCard: React.FC<FactionCardProps> = (props) => {
     }
 
     const handleClick = ():void => {
-        console.log(`toggle faction`)
         getSolarSystem();
         getCorporationInfo();
         setIsOpen(!isOpen);

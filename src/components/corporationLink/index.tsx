@@ -18,14 +18,12 @@ const CorporationLink: React.FC<CorporationLinkProps> = (props) => {
 
     const handleClick = (event: React.MouseEvent):void => {
         event.stopPropagation();
-        console.log(`open popup`)
         setIsOpen(true);
     }
 
     const handleClose = (event: React.MouseEvent): void => {
         event.stopPropagation();
         setIsOpen(false);
-        console.log(`close popup` );
     }
 
     return (
